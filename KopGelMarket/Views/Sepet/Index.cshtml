@@ -1,0 +1,169 @@
+﻿@model List<SepetOge>
+@{
+    ViewBag.DNone = "d-none";
+    ViewBag.Title = "Sepet";
+}
+
+<h2>Sepetim</h2>
+
+
+
+
+<div class="card shopping-cart ">
+    <div class="card-header bg-dark text-light">
+        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        Sepet
+        <a href="@Url.Action("Index","Home")" class="btn btn-outline-info btn-sm float-right">Alışverişe Devam Et</a>
+        <div class="clearfix"></div>
+    </div>
+    <div class="card-body">
+        @if (Model.Count() == 0)
+        {
+            <div class="urunRow">
+
+                <div class="row ">
+                    <div class="col-12 col-sm-12 col-md-2 text-center">
+
+
+                    </div>
+                    <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
+
+
+                        <h4 class="text-center">Sepetinizde ürün bulunmuyor</h4>
+
+
+
+                    </div>
+                </div>
+            </div>
+        }
+
+        <!-- PRODUCT -->
+        @foreach (var item in Model)
+        {
+
+            <div class="urunRow">
+
+                <div class="row ">
+                    <div class="col-12 col-sm-12 col-md-2 text-center">
+
+                        @Html.UrunImg(item.ResimYolu, new { width = 90, height = 90 })
+                    </div>
+                    <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
+                        @if (item.UrunAd == null)
+                        {
+                            <h4 class="bosSepet">Sepetinizde ürün bulunmuyor</h4>
+                        }
+                        <h4 class="product-name"><strong>@item.UrunAd</strong></h4>
+                        <h4>
+                            <small>@item.KategoriAd</small>
+                        </h4>
+                    </div>
+                    <div class="col-12 col-sm-12  text-sm-center col-md-4 text-md-right row">
+                        <div class="col-3 col-sm-3 col-md-6  text-md-right" style="padding-top: 5px">
+                            <h6><strong>@string.Format("{0:0.00}₺", item.Adet * item.BirimFiyat) <span class="text-muted">x</span></strong></h6>
+                        </div>
+
+                        <div class="col-4 col-sm-4 col-md-4 ">
+                            <div class="quantity">
+                                <input type="button" value="+" class="plus">
+
+                                <input type="number" step="1" max="99" min="1" value="@item.Adet" title="Miktar" class="qty"
+                                       size="4">
+                                <input type="button" value="-" class="minus">
+                            </div>
+                        </div>
+                        <div class="col-2 col-sm-2 col-md-2 text-right">
+                            <button type="button" class="btn btn-outline-danger btn-xs " data-urun-sil="@item.UrunId">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+
+            </div>
+
+
+        }
+
+
+        <!-- END PRODUCT -->
+
+        <div class="float-right">
+            <a href="" class="btn btn-outline-dark float-right btnGuncelle">
+                Sepeti Güncelle <i class="fas fa-sync"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="coupon col-md-5 col-sm-5 no-padding-left float-left">
+            <div class="row">
+                <div class="col-6">
+                    <input type="text" class="form-control" placeholder="Kupon kodu">
+                </div>
+                <div class="col-6">
+                    <input type="submit" class="btn btn-outline-secondary" value="Kupon kullan">
+                </div>
+            </div>
+        </div>
+        <div class="float-right" style="margin: 10px">
+            <a href="@Url.Action("Odeme","Sepet")" class="btn btn-success float-right">Ödemeye Geç</a>
+            <div class="float-right" style="margin: 5px">
+                Toplam Tutar: <b class="sepetTutar">@string.Format("{0:0.00}₺", Html.SepetTutar())</b>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script>
+        $("[data-urun-sil]").click(function () {
+            var btnSil = $(this);
+            var urunId = $(this).data("urun-sil");
+            $.ajax({
+                type:"post",
+                url:"@Url.Action("SepetUrunSil","Sepet")",
+                data: { id: urunId },
+                success: function (result) {
+                    $(".sepetAdet").html(result.UrunAdet);
+                    $(".sepetTutar").html(result.ToplamTutar+"₺");
+                    alertify.success('Ürün Başarıyla Silindi');
+                    btnSil.closest(".urunRow").fadeOut(100)
+
+                }
+
+
+            });
+              
+        });
+
+        $(".btnGuncelle").click(function () {
+            @foreach (var item in Model)
+            {
+               // item.Adet=
+            }
+
+        });
+
+        $("input[class=plus]").click(function () {
+            var deger = Number($(this).next().val());
+            $(this).next().val(deger + Number(1));
+
+        });
+
+        $("input[class=minus]").click(function () {
+            var deger = Number($(this).prev().val());
+            if (deger == 0)
+            {
+                 $(this).siblings(".qty").val(Number(0));
+            }
+            else
+            {
+                $(this).siblings(".qty").val(deger - Number(1));
+            }
+
+        });
+    </script>
+
+}
+

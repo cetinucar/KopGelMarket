@@ -1,0 +1,15 @@
+﻿@model List<Kategori>
+<h3 class="my-4 text-info text-center">Kategoriler</h3>
+<div class="list-group">
+    @foreach (var item in Model)
+    {
+        <a href="@Url.Action("Index","Home",new { kategoriId=item.Id})" class="list-group-item katItem">@item.KategoriAd</a>
+    }
+</div>
+
+@section scripts{
+    <script>
+
+    </script>
+    
+    }

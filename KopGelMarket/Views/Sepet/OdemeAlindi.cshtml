@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Ödeme Başarılı";
+    
+}
+
+    <div class="text-success text-center mt-4">
+        <i class="far fa-check-circle fa-7x"></i>
+        <h2 class="mt-2">Tebrikler Ödeme Başarılı</h2>
+        <p> @(TempData["SiparisId"]==null?"-":TempData["SiparisId"]) nolu siparişiniz en kısa zamanda kargoya verilecektir..</p>
+    </div>
+
+

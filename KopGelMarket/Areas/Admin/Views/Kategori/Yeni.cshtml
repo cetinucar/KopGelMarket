@@ -1,0 +1,22 @@
+﻿@model Kategori
+@{
+    bool duzenleMi = ViewBag.Action == "Duzenle";
+    ViewBag.Title = duzenleMi ? "Kategori Düzenle" : "Kategori Ekle";
+}
+
+<h2>@(duzenleMi ? "Kategori Düzenle" : "Kategori Ekle")</h2>
+<div class="container">
+    @using (Html.BeginForm(duzenleMi ? "Duzenle" : "Yeni", "Kategori", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group">
+
+            @Html.LabelFor(x => x.KategoriAd)
+            @Html.TextBoxFor(x => x.KategoriAd, new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.KategoriAd, null, new { @class = "alert-danger" })
+        </div>
+        <button class="btn btn-primary">@(duzenleMi ? "Kaydet" : "Ekle")</button>
+        @Html.ActionLink("İptal", "Index", "Home", new { @class = "btn btn-secondary" })
+    }
+</div>
+

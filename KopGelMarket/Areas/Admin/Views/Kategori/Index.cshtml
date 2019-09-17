@@ -1,0 +1,129 @@
+﻿@model List<Kategori>
+@{
+    ViewBag.Title = "Kategoriler";
+}
+
+
+@if (Request.QueryString["islem"] == "guncellendi")
+{
+    <div class="alert alert-info">
+        @Request.QueryString["mesaj"];
+    </div>
+}
+else if (Request.QueryString["islem"] == "eklendi")
+{
+    <div class="alert alert-info">
+        @Request.QueryString["mesaj"];
+    </div>
+}
+else if(Request.QueryString["islem"] == "silindi")
+{
+    <div class="alert alert-info">
+        @Request.QueryString["mesaj"];
+    </div>
+}
+<!-- Page Heading -->
+<h1 class="h3 mb-2 text-gray-800">Kategoriler</h1>
+<div class="d-flex flex-row-reverse bg-gray-100">
+    <div class="p-2 bg-gray-100"><a href="@Url.Action("Yeni","Kategori")" class="btn btn-info"><i class="fas fa-plus-square"></i> </a></div>
+</div>
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Kategoriler Tablosu</h6>
+
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Kategori Id</th>
+                        <th>Kategori Ad</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Kategori Id</th>
+                        <th>Kategori Ad</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.KategoriAd</td>
+                            <td class="text-right">
+                                <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#exampleModalCenter" data-id="@item.Id" data-kategoriad="@item.KategoriAd"> <i class="fas fa-trash"></i></a>
+                                <a href="@Url.Action("Duzenle","Kategori",new {id=item.Id })" class="btn btn-primary"><i class="fas fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<!-- Button trigger modal -->
+<!-- Modal -->
+@using (Html.BeginForm("Sil", "Kategori", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <input name="id" id="silId" type="hidden" />
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Kategori Silme Onay</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <span id="silmeKategoriAd"></span> adlı kategori silinecek.Onaylıyor musunuz?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-danger">Sil</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts
+    {
+    <script>
+        $("#dataTable").DataTable({
+            pageLength: 5,
+            language: { url: "/Areas/Admin/vendor/datatables/Turkish.json" }
+
+        });
+
+
+        $('#exampleModalCenter').on('show.bs.modal', function (event) {
+            var buton = $(event.relatedTarget);
+
+            var id = buton.data("id");
+            var kategoriAd = buton.data("kategoriad");
+
+            $("#silmeKategoriAd").html(kategoriAd);
+            $("#silId").val(id);
+
+        });
+
+        $(".alert").delay("2000").slideUp(500, function () {
+            $(this).alert("close");
+        });
+    </script>
+
+
+}
+
+
+
+
+
