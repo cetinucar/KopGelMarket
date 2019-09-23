@@ -17,9 +17,9 @@ namespace KopGelMarket.Common
         /// <param name="body">Mailin İçeriği</param>
         public static void SendMail(string destination, string subject, string body)
         {
-            var fromAddress = new MailAddress("info@cetinucar.com", "Çetin Uçar");
+            var fromAddress = new MailAddress("info@example.com", "Çetin Uçar");
             var toAddress = new MailAddress(destination, "To Name");
-            string fromPassword = "Kayseri3.8";
+            string fromPassword = "111111";
 
             var smtp = new SmtpClient
             {
